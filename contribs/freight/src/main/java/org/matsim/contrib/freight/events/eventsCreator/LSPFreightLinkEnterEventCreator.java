@@ -33,11 +33,9 @@ import org.matsim.contrib.freight.events.LSPFreightLinkEnterEvent;
 /*package-private*/ final class LSPFreightLinkEnterEventCreator implements LSPEventCreator {
 
 	@Override
-	public Event createEvent(Event event, Carrier carrier, Activity activity, ScheduledTour scheduledTour,
-			Id<Person> driverId, int activityCounter) {
+	public Event createEvent(Event event, Carrier carrier, Activity activity, ScheduledTour scheduledTour, Id<Person> driverId, int activityCounter) {
 		if(event instanceof LinkEnterEvent) {
-			LinkEnterEvent enterEvent = (LinkEnterEvent) event;
-			return new LSPFreightLinkEnterEvent(carrier.getId(), scheduledTour.getVehicle().getId(), driverId, enterEvent.getLinkId(), enterEvent.getTime(), scheduledTour.getVehicle());
+			return new LSPFreightLinkEnterEvent((LinkEnterEvent) event, carrier.getId(), scheduledTour.getVehicle().getId(), driverId);
 		}
 		return null;
 	}	

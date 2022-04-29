@@ -25,6 +25,7 @@ import java.util.Map;
 
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.events.Event;
+import org.matsim.api.core.v01.events.LinkLeaveEvent;
 import org.matsim.api.core.v01.network.Link;
 import org.matsim.api.core.v01.population.Person;
 import org.matsim.contrib.freight.carrier.Carrier;
@@ -38,24 +39,20 @@ public final class LSPFreightLinkLeaveEvent extends Event {
 	public static final String ATTRIBUTE_LINK = "link";
 	public static final String ATTRIBUTE_CARRIER = "carrier";
 	public static final String ATTRIBUTE_DRIVER = "driver";
-	
-	private final CarrierVehicle carrierVehicle;
+
 	private final Id<Carrier> carrierId;
 	private final Id<Person> driverId;
-	private final Id<Vehicle> vehicleId;
 	private final Id<Link>linkId;
+
+
+	private final Id<Vehicle> vehicleId;
 	
-	public LSPFreightLinkLeaveEvent(Id<Carrier>carrierId, Id<Vehicle> vehicleId, Id<Person>driverId, Id<Link>linkId, double time, CarrierVehicle vehicle) {
-		super(time);
-		this.carrierVehicle = vehicle ;
+	public LSPFreightLinkLeaveEvent(LinkLeaveEvent event, Id<Carrier> carrierId, Id<Vehicle> vehicleId, Id<Person> driverId) {
+		super(event.getTime());
+		this.vehicleId = vehicleId ;
 		this.carrierId = carrierId;
 		this.driverId = driverId;
-		this.vehicleId = vehicleId; 
-		this.linkId = linkId; 
-	}
-
-	public CarrierVehicle getCarrierVehicle() {
-		return carrierVehicle;
+		this.linkId = event.getLinkId();
 	}
 
 	public Id<Carrier> getCarrierId() {
@@ -66,12 +63,12 @@ public final class LSPFreightLinkLeaveEvent extends Event {
 		return driverId;	
 	}
 
-	public Id<Vehicle> getVehicleId() {
-		return vehicleId;
-	}
-
 	public Id<Link> getLinkId() {
 		return linkId;
+	}
+
+	public Id<Vehicle> getVehicleId() {
+		return vehicleId;
 	}
 
 	@Override
@@ -82,8 +79,8 @@ public final class LSPFreightLinkLeaveEvent extends Event {
 	@Override
 	public Map<String, String> getAttributes() {
 		Map<String, String> attr = super.getAttributes();
-		attr.put(ATTRIBUTE_VEHICLE, this.vehicleId.toString());
 		attr.put(ATTRIBUTE_LINK, this.linkId.toString());
+		attr.put(ATTRIBUTE_VEHICLE, this.vehicleId.toString());
 		attr.put(ATTRIBUTE_CARRIER, this.carrierId.toString());
 		attr.put(ATTRIBUTE_DRIVER, this.driverId.toString());
 		return attr;
